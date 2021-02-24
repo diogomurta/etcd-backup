@@ -53,6 +53,9 @@ ETCD_BACKUP_PREFIX=/var/lib/etcd/backups/$ETCD_BACKUP_INTERVAL
 ETCD_BACKUP_DIRECTORY=$ETCD_BACKUP_PREFIX/etcd-$(date +"%F")_$(date +"%T")
 ENDPOINTS=https://localhost:2379
 
+## Variables from kubespray env file
+source /etc/etcd.env
+
 ## Functions
 
 backup_etcdv2() {
@@ -74,6 +77,9 @@ backup_etcdv3() {
     export ETCDCTL_API=3
     /usr/local/bin/etcdctl \
         --endpoints=$ENDPOINTS \
+        --cacert=$ETCDCTL_CACERT \
+        --cert=$ETCDCTL_CERT \
+        --key=$ETCDCTL_KEY \
         snapshot save $ETCD_BACKUP_DIRECTORY/snapshot.db
 }
 
